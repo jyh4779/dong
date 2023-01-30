@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -25,14 +26,21 @@ public class PlayActivity extends AppCompatActivity implements View.OnTouchListe
     int dungCount = 0;
     int hdlCount = 0;
     int downspeed = 30;
+    int level = 1;
+
+    boolean stopFlag = false;
 
     float touchX;
 
     public ImageView zola;
     public TextView scoreText;
     public TextView endScore;
+    public TextView lvBoard;
+    Button endBt;
     ImageView dung[] = new ImageView[30];
     dungHandler hdl[] = new dungHandler[30];
+    dungHandler lvup = new dungHandler();
+
 
 
     ConstraintLayout PlayLayout;
@@ -57,9 +65,9 @@ public class PlayActivity extends AppCompatActivity implements View.OnTouchListe
         height = PlayLayout.getHeight();
         //Log.i("onWidowsFocusChanged","height = "+String.valueOf(height));
 
-        zolaWidth = width/16;
+        zolaWidth = width/8;
         //Log.i("onWidowsFocusChanged","zolaWidth = "+String.valueOf(zolaWidth));
-        zolaHeight = height/18;
+        zolaHeight = height/9;
         //Log.i("onWidowsFocusChanged","zolaHeight = "+String.valueOf(zolaHeight));
         zolaX = width/2-zolaWidth/8;
         //Log.i("onWidowsFocusChanged","zolaX = "+String.valueOf(zolaX));
@@ -78,6 +86,7 @@ public class PlayActivity extends AppCompatActivity implements View.OnTouchListe
         scoreText.setText(String.valueOf(score));
 
         endScore = (TextView) findViewById(R.id.endScore);
+        lvBoard = (TextView) findViewById(R.id.levelBoard);
 
         PlayLayout.setOnTouchListener(this);
 
@@ -86,9 +95,19 @@ public class PlayActivity extends AppCompatActivity implements View.OnTouchListe
             hdl[hdlCount] = new dungHandler();
             hdlCount++;
         }
+        lvup = new dungHandler();
 
         CountThread thread = new CountThread();
         thread.start();
+
+        endBt = (Button) findViewById(R.id.endButton);
+
+        endBt.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
     }
 
     @Override
@@ -113,7 +132,7 @@ public class PlayActivity extends AppCompatActivity implements View.OnTouchListe
 
     private class CountThread extends Thread {
         public void run() {
-            while(true){
+            while(!stopFlag){
                 if(dungCount < 30) {
                     Log.i(String.valueOf(this), "dungCount["+dungCount+"] Start!!");
                     DongThread thread = new DongThread(dungCount);
@@ -123,6 +142,15 @@ public class PlayActivity extends AppCompatActivity implements View.OnTouchListe
                     Log.i(String.valueOf(this), "dungCount is 30");
                     Log.i(String.valueOf(this), "Return to 0");
                     dungCount = -1;
+                    level++;
+
+                    Message message = lvup.obtainMessage();
+                    Bundle bundle = new Bundle();
+
+                    bundle.putInt("msgCode", 3);
+                    message.setData(bundle);
+
+                    lvup.sendMessage(message);
                 }
                 try {
                     Thread.sleep(1000);
@@ -168,7 +196,7 @@ public class PlayActivity extends AppCompatActivity implements View.OnTouchListe
             Log.i(String.valueOf(this), "run, dungY = "+dungY);
             int dungSpeed = downspeed;
 
-            while (true) {
+            while (!stopFlag) {
                 Message message = hdl[threadDungCount].obtainMessage();
                 Bundle bundle = new Bundle();
 
@@ -240,6 +268,7 @@ public class PlayActivity extends AppCompatActivity implements View.OnTouchListe
 
                     if (dungY+dung[dungSetCount].getHeight() >= zolaY) {
                         Log.i("dungHandler", "case 1: check Game End!");
+
                         checkEnd(dungSetCount);
                     }
                     break;
@@ -247,12 +276,16 @@ public class PlayActivity extends AppCompatActivity implements View.OnTouchListe
                     int dungEndCount = bundle.getInt("dungEndCount");
 
                     score += 1;
+                    downspeed += level;
                     scoreText.setText(String.valueOf(score));
                     Log.i(String.valueOf(this), "dungHandler, dung[ = " + dungEndCount+"] is Over!");
                     Log.i(String.valueOf(this), "dungHandler, Score = "+score);
 
                     PlayLayout.removeView(dung[dungEndCount]);
                     Log.i(String.valueOf(this), "dungHandler, dung[ = " + dungEndCount+"] remove");
+                    break;
+                case 3:
+                    lvBoard.setText(String.valueOf(level)+"단계");
                     break;
             }
         }
@@ -267,7 +300,9 @@ public class PlayActivity extends AppCompatActivity implements View.OnTouchListe
             if (zXStart <= dXEnd) {
                 Log.i("checkEnd", "dung hit zola. It's End!");
                 EndLayout.setVisibility(View.VISIBLE);
-                endScore.setText(String.valueOf(score));
+                endScore.setText("점수 : "+String.valueOf(score));
+
+                stopFlag = true;
 
             }
         }
@@ -275,10 +310,10 @@ public class PlayActivity extends AppCompatActivity implements View.OnTouchListe
             if (zXEnd >= dXStart){
                 Log.i("checkEnd", "dung hit zola. It's End!");
                 EndLayout.setVisibility(View.VISIBLE);
-                endScore.setText(String.valueOf(score));
+                endScore.setText("점수 : "+String.valueOf(score));
 
+                stopFlag = true;
             }
         }
     }
-
 }

@@ -5,6 +5,32 @@
     android:id="@+id/menu"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"    >
+    android:orientation="vertical"
+    android:gravity="center">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:src="@drawable/mainlogo" />
+
+    <Button
+        android:id="@+id/start"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="?attr/dialogPreferredPadding"
+        android:text="시 작" />
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/option"
+        android:layout_marginBottom="?attr/dialogPreferredPadding"
+        android:text="옵 션" />
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/record"
+        android:layout_marginBottom="?attr/dialogPreferredPadding"
+        android:text="기 록" />
 
 </LinearLayout>
