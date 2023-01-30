@@ -8,6 +8,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
@@ -23,16 +24,19 @@ public class PlayActivity extends AppCompatActivity implements View.OnTouchListe
     int score = 0;
     int dungCount = 0;
     int hdlCount = 0;
+    int downspeed = 30;
 
     float touchX;
 
     public ImageView zola;
     public TextView scoreText;
+    public TextView endScore;
     ImageView dung[] = new ImageView[30];
+    dungHandler hdl[] = new dungHandler[30];
+
 
     ConstraintLayout PlayLayout;
-
-    dungHandler hdl[] = new dungHandler[30];
+    LinearLayout EndLayout;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -40,6 +44,7 @@ public class PlayActivity extends AppCompatActivity implements View.OnTouchListe
         setContentView(R.layout.game_main);
 
         PlayLayout = (ConstraintLayout) findViewById(R.id.play);
+        EndLayout = (LinearLayout) findViewById(R.id.endLayout);
 
     }
 
@@ -71,6 +76,8 @@ public class PlayActivity extends AppCompatActivity implements View.OnTouchListe
 
         scoreText = (TextView) findViewById(R.id.jumsu);
         scoreText.setText(String.valueOf(score));
+
+        endScore = (TextView) findViewById(R.id.endScore);
 
         PlayLayout.setOnTouchListener(this);
 
@@ -107,12 +114,14 @@ public class PlayActivity extends AppCompatActivity implements View.OnTouchListe
     private class CountThread extends Thread {
         public void run() {
             while(true){
-                if(dungCount <= 30) {
+                if(dungCount < 30) {
                     Log.i(String.valueOf(this), "dungCount["+dungCount+"] Start!!");
                     DongThread thread = new DongThread(dungCount);
                     thread.start();
                 }
-                else if(dungCount > 30) {
+                else if(dungCount >= 30) {
+                    Log.i(String.valueOf(this), "dungCount is 30");
+                    Log.i(String.valueOf(this), "Return to 0");
                     dungCount = -1;
                 }
                 try {
@@ -157,7 +166,7 @@ public class PlayActivity extends AppCompatActivity implements View.OnTouchListe
             // 스레드에게 수행시킬 동작들 구현
             int dungY = (int) threadDong.getY();
             Log.i(String.valueOf(this), "run, dungY = "+dungY);
-            int dungSpeed = 10;
+            int dungSpeed = downspeed;
 
             while (true) {
                 Message message = hdl[threadDungCount].obtainMessage();
@@ -223,12 +232,16 @@ public class PlayActivity extends AppCompatActivity implements View.OnTouchListe
 
                 case 1:
                     int dungSetCount = bundle.getInt("dungSetCount");
-
                     int dungY = bundle.getInt("setY");
 
                     dung[dungSetCount].setY(dungY);
                     Log.i(String.valueOf(this), "dungHandler, dungCount[" + dungSetCount+"]");
                     Log.i(String.valueOf(this), "dungHandler, setY = " + dungY);
+
+                    if (dungY+dung[dungSetCount].getHeight() >= zolaY) {
+                        Log.i("dungHandler", "case 1: check Game End!");
+                        checkEnd(dungSetCount);
+                    }
                     break;
                 case 2:
                     int dungEndCount = bundle.getInt("dungEndCount");
@@ -244,4 +257,28 @@ public class PlayActivity extends AppCompatActivity implements View.OnTouchListe
             }
         }
     }
+    void checkEnd (int dungCount){
+        float dXStart = dung[dungCount].getX();
+        float dXEnd = dXStart+dung[dungCount].getWidth();
+        float zXStart = zola.getX();
+        float zXEnd = zXStart+zola.getWidth();
+
+        if (zXStart >= dXStart) {
+            if (zXStart <= dXEnd) {
+                Log.i("checkEnd", "dung hit zola. It's End!");
+                EndLayout.setVisibility(View.VISIBLE);
+                endScore.setText(String.valueOf(score));
+
+            }
+        }
+        else if (zXStart<= dXStart ){
+            if (zXEnd >= dXStart){
+                Log.i("checkEnd", "dung hit zola. It's End!");
+                EndLayout.setVisibility(View.VISIBLE);
+                endScore.setText(String.valueOf(score));
+
+            }
+        }
+    }
+
 }
