@@ -5,10 +5,23 @@
     android:layout_height="match_parent">
 
     <ImageView
+        android:id="@+id/introImage"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:src="@drawable/intro"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/introStart"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="시작하려면 아무 곳이나 클릭하세요."
+        app:layout_constraintLeft_toLeftOf="@id/introImage"
+        app:layout_constraintRight_toRightOf="@id/introImage"
+        app:layout_constraintBottom_toBottomOf="@id/introImage"
+        android:layout_marginBottom="60dp"
+        android:textSize="10sp"
+        android:visibility="invisible" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

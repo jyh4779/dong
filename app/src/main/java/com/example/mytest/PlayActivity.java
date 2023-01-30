@@ -25,7 +25,7 @@ public class PlayActivity extends AppCompatActivity implements View.OnTouchListe
     int score = 0;
     int dungCount = 0;
     int hdlCount = 0;
-    int downspeed = 30;
+    int downspeed = 50;
     int level = 1;
 
     boolean stopFlag = false;
@@ -142,7 +142,7 @@ public class PlayActivity extends AppCompatActivity implements View.OnTouchListe
                     Log.i(String.valueOf(this), "dungCount is 30");
                     Log.i(String.valueOf(this), "Return to 0");
                     dungCount = -1;
-                    level++;
+                    level+=3;
 
                     Message message = lvup.obtainMessage();
                     Bundle bundle = new Bundle();
@@ -153,7 +153,7 @@ public class PlayActivity extends AppCompatActivity implements View.OnTouchListe
                     lvup.sendMessage(message);
                 }
                 try {
-                    Thread.sleep(1000);
+                    Thread.sleep(300);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -280,6 +280,8 @@ public class PlayActivity extends AppCompatActivity implements View.OnTouchListe
                     scoreText.setText(String.valueOf(score));
                     Log.i(String.valueOf(this), "dungHandler, dung[ = " + dungEndCount+"] is Over!");
                     Log.i(String.valueOf(this), "dungHandler, Score = "+score);
+
+                    dung[dungEndCount].setY(0);
 
                     PlayLayout.removeView(dung[dungEndCount]);
                     Log.i(String.valueOf(this), "dungHandler, dung[ = " + dungEndCount+"] remove");
