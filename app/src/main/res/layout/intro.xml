@@ -16,12 +16,11 @@
         android:id="@+id/introStart"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="시작하려면 아무 곳이나 클릭하세요."
+        android:text="로딩 중..."
         app:layout_constraintLeft_toLeftOf="@id/introImage"
         app:layout_constraintRight_toRightOf="@id/introImage"
         app:layout_constraintBottom_toBottomOf="@id/introImage"
         android:layout_marginBottom="60dp"
-        android:textSize="10sp"
-        android:visibility="invisible" />
+        android:textSize="10sp"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

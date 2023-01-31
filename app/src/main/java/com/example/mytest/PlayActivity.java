@@ -8,6 +8,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -17,6 +18,7 @@ import androidx.annotation.WorkerThread;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
+import java.util.Date;
 import java.util.Random;
 
 public class PlayActivity extends AppCompatActivity implements View.OnTouchListener {
@@ -25,7 +27,7 @@ public class PlayActivity extends AppCompatActivity implements View.OnTouchListe
     int score = 0;
     int dungCount = 0;
     int hdlCount = 0;
-    int downspeed = 50;
+    int downspeed = 25;
     int level = 1;
 
     boolean stopFlag = false;
@@ -105,6 +107,7 @@ public class PlayActivity extends AppCompatActivity implements View.OnTouchListe
         endBt.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
+                save_values();
                 finish();
             }
         });
@@ -115,17 +118,19 @@ public class PlayActivity extends AppCompatActivity implements View.OnTouchListe
         int w = ((ViewGroup) zola.getParent()).getWidth() - zola.getWidth();
         //Log.i("onTouch", "w = "+String.valueOf(w));
 
-        if(event.getAction() == MotionEvent.ACTION_DOWN) {
-            touchX = event.getX();
-            //Log.i("onTouch", "ACTION_DOWN, touchX = "+touchX);
-            return true;
-        }else if(event.getAction() == MotionEvent.ACTION_MOVE){
-            //Log.i("onTouch", "ACTION_MOVE");
-            touchX = event.getX();
-            if(touchX > 0 && touchX < w) zola.setX(touchX);
-            //Log.i("onTouch", "ACTION_MOVE, touchX = "+touchX);
-            //Log.i("onTouch", "ACTION_MOVE, zolaX = "+zola.getX());
-            return true;
+        if(!stopFlag) {
+            if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                touchX = event.getX();
+                //Log.i("onTouch", "ACTION_DOWN, touchX = "+touchX);
+                return true;
+            } else if (event.getAction() == MotionEvent.ACTION_MOVE) {
+                //Log.i("onTouch", "ACTION_MOVE");
+                touchX = event.getX();
+                if (touchX > 0 && touchX < w) zola.setX(touchX);
+                //Log.i("onTouch", "ACTION_MOVE, touchX = "+touchX);
+                //Log.i("onTouch", "ACTION_MOVE, zolaX = "+zola.getX());
+                return true;
+            }
         }
         return false;
     }
@@ -142,7 +147,7 @@ public class PlayActivity extends AppCompatActivity implements View.OnTouchListe
                     Log.i(String.valueOf(this), "dungCount is 30");
                     Log.i(String.valueOf(this), "Return to 0");
                     dungCount = -1;
-                    level+=3;
+                    level+=1;
 
                     Message message = lvup.obtainMessage();
                     Bundle bundle = new Bundle();
@@ -201,7 +206,7 @@ public class PlayActivity extends AppCompatActivity implements View.OnTouchListe
                 Bundle bundle = new Bundle();
 
                 dungY += dungSpeed;
-                Log.i(String.valueOf(this), "run, dungY = "+dungY);
+                //Log.i(String.valueOf(this), "run, dungY = "+dungY);
 
                 if (dungY < height-(int)threadDong.getHeight()) {
                     bundle.putInt("msgCode", 1);
@@ -211,10 +216,10 @@ public class PlayActivity extends AppCompatActivity implements View.OnTouchListe
                     message.setData(bundle);
 
                     hdl[threadDungCount].sendMessage(message);
-                    Log.i(String.valueOf(this), "run, sendMessage Code[1], dungCount[" + threadDungCount+"]");
+                    //Log.i(String.valueOf(this), "run, sendMessage Code[1], dungCount[" + threadDungCount+"]");
 
                     try {
-                        Thread.sleep(50);
+                        Thread.sleep(25);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
@@ -239,7 +244,7 @@ public class PlayActivity extends AppCompatActivity implements View.OnTouchListe
 
             Bundle bundle = msg.getData();
             int msgCode = bundle.getInt("msgCode");
-            Log.i(String.valueOf(this), "dungHandler, Receive Message Code["+msgCode+"]");
+            //Log.i(String.valueOf(this), "dungHandler, Receive Message Code["+msgCode+"]");
 
             switch(msgCode) {
                 case 0:
@@ -248,7 +253,7 @@ public class PlayActivity extends AppCompatActivity implements View.OnTouchListe
                     float dungInitX = bundle.getFloat("dungX");
                     float dungInitY = bundle.getFloat("dungY");
                     int dungInitCount = bundle.getInt("dungInitCount");
-                    Log.i(String.valueOf(this), "dungHandler, Receive DungCount["+dungInitCount+"]");
+                    //Log.i(String.valueOf(this), "dungHandler, Receive DungCount["+dungInitCount+"]");
 
                     dung[dungCount].setX(dungInitX);
                     dung[dungCount].setY(dungInitY);
@@ -263,11 +268,13 @@ public class PlayActivity extends AppCompatActivity implements View.OnTouchListe
                     int dungY = bundle.getInt("setY");
 
                     dung[dungSetCount].setY(dungY);
-                    Log.i(String.valueOf(this), "dungHandler, dungCount[" + dungSetCount+"]");
-                    Log.i(String.valueOf(this), "dungHandler, setY = " + dungY);
+                    //Log.i(String.valueOf(this), "dungHandler, dungCount[" + dungSetCount+"]");
+                    //Log.i(String.valueOf(this), "dungHandler, setY = " + dungY);
 
-                    if (dungY+dung[dungSetCount].getHeight() >= zolaY) {
+                    if (dungY+dung[dungSetCount].getHeight()-60 >= zolaY) {
                         Log.i("dungHandler", "case 1: check Game End!");
+                        Log.i("checkEnd", "zolaY = "+zolaY);
+                        Log.i("checkEnd", "dungY = "+dungY+", "+dung[dungSetCount].getHeight());
 
                         checkEnd(dungSetCount);
                     }
@@ -301,6 +308,9 @@ public class PlayActivity extends AppCompatActivity implements View.OnTouchListe
         if (zXStart >= dXStart) {
             if (zXStart <= dXEnd) {
                 Log.i("checkEnd", "dung hit zola. It's End!");
+                Log.i("checkEnd", "zolaX = "+zXStart+", "+zXEnd);
+                Log.i("checkEnd", "dungX = "+dXStart+", "+dXEnd);
+
                 EndLayout.setVisibility(View.VISIBLE);
                 endScore.setText("점수 : "+String.valueOf(score));
 
@@ -311,11 +321,27 @@ public class PlayActivity extends AppCompatActivity implements View.OnTouchListe
         else if (zXStart<= dXStart ){
             if (zXEnd >= dXStart){
                 Log.i("checkEnd", "dung hit zola. It's End!");
+                Log.i("checkEnd", "zolaX = "+zXStart+", "+zXEnd);
+                Log.i("checkEnd", "dungX = "+dXStart+", "+dXEnd);
                 EndLayout.setVisibility(View.VISIBLE);
                 endScore.setText("점수 : "+String.valueOf(score));
 
                 stopFlag = true;
             }
         }
+    }
+    private void save_values() {
+        RoomDB database = RoomDB.getInstance(this);
+        DDongData data = new DDongData();
+
+        long now = System.currentTimeMillis();
+        Date date = new Date(now);
+
+        EditText editName = (EditText) findViewById(R.id.editName);
+        data.setNAME(editName.getText().toString());
+        data.setSCORE(score);
+        data.setPLAY_TIME(String.valueOf(date));
+
+        database.mainDao().insert(data);
     }
 }

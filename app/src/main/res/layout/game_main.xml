@@ -28,7 +28,7 @@
         android:id="@+id/endLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@color/black"
+        android:background="@color/material_dynamic_neutral60"
         android:gravity="center"
         android:orientation="vertical"
         android:visibility="invisible"
@@ -38,11 +38,25 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="똥에 맞았습니다!"
+            android:textColor="@color/black" />
+
+        <EditText
+            android:id="@+id/editName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/design_default_color_surface"
+            android:text="이름"
+            android:textColor="@color/black" />
+
+        <TextView
             android:id="@+id/endScore"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="0"
-            android:textColor="@color/teal_200" />
+            android:textColor="@color/black" />
 
         <Button
             android:id="@+id/endButton"

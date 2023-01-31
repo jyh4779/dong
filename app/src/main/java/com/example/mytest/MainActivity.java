@@ -48,13 +48,12 @@ public class MainActivity extends AppCompatActivity {
         });
 
         //옵션 버튼 클릭 이벤트
-        /*
-        btnOption.setOnClickListener(new View.OnClickListener(){
+        btnRecord.setOnClickListener(new View.OnClickListener(){
             public void onClick(View view ) {
-                setContentView(R.layout.intro);
+                Intent intent= new Intent(getApplicationContext(), RecordActivity.class);
+                startActivity(intent);
             }
         });
-        */
     }
 };
 
