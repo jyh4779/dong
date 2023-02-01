@@ -1,5 +1,6 @@
 package com.example.mytest;
 
+import android.database.sqlite.SQLiteConstraintException;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -18,6 +19,7 @@ import androidx.annotation.WorkerThread;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Random;
 
@@ -180,7 +182,7 @@ public class PlayActivity extends AppCompatActivity implements View.OnTouchListe
             int dungWidth = zolaWidth;
             int dungHeight = zolaHeight;
             float dungX = randomNum;
-            float dungY = 0;
+            float dungY = -dungHeight;
 
             Message message = hdl[threadDungCount].obtainMessage();
             Bundle bundle = new Bundle();
@@ -331,17 +333,27 @@ public class PlayActivity extends AppCompatActivity implements View.OnTouchListe
         }
     }
     private void save_values() {
-        RoomDB database = RoomDB.getInstance(this);
-        DDongData data = new DDongData();
+        Thread t = new Thread(() -> {
+            RoomDB database = RoomDB.getInstance(this);
+            DDongData data = new DDongData();
 
-        long now = System.currentTimeMillis();
-        Date date = new Date(now);
+            long now = System.currentTimeMillis();
+            Date date = new Date(now);
+            SimpleDateFormat sdf = new SimpleDateFormat("MM/dd hh:mm");
+            String getTime = sdf.format(date);
 
-        EditText editName = (EditText) findViewById(R.id.editName);
-        data.setNAME(editName.getText().toString());
-        data.setSCORE(score);
-        data.setPLAY_TIME(String.valueOf(date));
 
-        database.mainDao().insert(data);
+            EditText editName = (EditText) findViewById(R.id.editName);
+            data.setNAME(String.valueOf(editName.getText()));
+            data.setSCORE(score);
+            data.setPLAY_TIME(getTime);
+            try {
+                database.mainDao().insert(data);
+            } catch (SQLiteConstraintException e) {
+                Log.d(String.valueOf(this), e.getMessage());
+            }
+            database.close();
+        });
+        t.start();
     }
 }

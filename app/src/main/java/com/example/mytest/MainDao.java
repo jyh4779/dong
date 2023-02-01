@@ -25,4 +25,7 @@ public interface MainDao {
 
     @Query("SELECT * FROM TB_DDONG_SCORE")
     List<DDongData> getAll();
+
+    @Query("SELECT * FROM TB_DDONG_SCORE ORDER BY SCORE DESC")
+    List<DDongData> getLank();
 }
