@@ -1,4 +1,4 @@
-package com.android.mylibrary;
+package co.kr.ddong;
 
 import org.junit.Test;
 

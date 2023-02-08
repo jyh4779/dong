@@ -35,20 +35,13 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        android:padding="20dp">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="똥에 맞았습니다!"
-            android:textColor="@color/black" />
-
-        <EditText
-            android:id="@+id/editName"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:backgroundTint="@color/design_default_color_surface"
-            android:text="이름"
             android:textColor="@color/black" />
 
         <TextView
@@ -64,4 +57,12 @@
             android:layout_height="wrap_content"
             android:text="확인" />
     </LinearLayout>
+    <ImageView
+        android:id="@+id/zola"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:src="@drawable/zolaman"
+        />
 </androidx.constraintlayout.widget.ConstraintLayout>

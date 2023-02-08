@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="2"
+        android:visibility="invisible" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="2"
+        android:orientation="horizontal">
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:visibility="invisible" />
+        <TableLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="3"
+            android:gravity="bottom"
+            android:stretchColumns="1,2">
+            <TableRow>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:textSize="24sp"
+                    android:background="@color/gray"
+                    android:textColor="@color/black"
+                    android:text="순위" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:textSize="24sp"
+                    android:background="@color/gray"
+                    android:textColor="@color/black"
+                    android:text="점수" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:textSize="24sp"
+                    android:background="@color/gray"
+                    android:textColor="@color/black"
+                    android:text="게임시간" />
+            </TableRow>
+            <TableRow>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:textSize="24sp"
+                    android:background="@color/gray"
+                    android:textColor="@color/black"
+                    android:text="1" />
+                <TextView
+                    android:id="@+id/oneScore"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:textSize="24sp"
+                    android:background="@color/gray"
+                    android:textColor="@color/black"
+                    android:text=" " />
+                <TextView
+                    android:id="@+id/oneTime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:textSize="24sp"
+                    android:background="@color/gray"
+                    android:textColor="@color/black"
+                    android:text=" " />
+            </TableRow>
+            <TableRow>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:textSize="24sp"
+                    android:background="@color/gray"
+                    android:textColor="@color/black"
+                    android:text="2" />
+                <TextView
+                    android:id="@+id/twoScore"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:textSize="24sp"
+                    android:background="@color/gray"
+                    android:textColor="@color/black"
+                    android:text=" " />
+                <TextView
+                    android:id="@+id/twoTime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:textSize="24sp"
+                    android:background="@color/gray"
+                    android:textColor="@color/black"
+                    android:text=" " />
+            </TableRow>
+            <TableRow>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:textSize="24sp"
+                    android:background="@color/gray"
+                    android:textColor="@color/black"
+                    android:text="3" />
+                <TextView
+                    android:id="@+id/threeScore"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:textSize="24sp"
+                    android:background="@color/gray"
+                    android:textColor="@color/black"
+                    android:text=" " />
+                <TextView
+                    android:id="@+id/threeTime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:textSize="24sp"
+                    android:background="@color/gray"
+                    android:textColor="@color/black"
+                    android:text=" " />
+            </TableRow>
+            <TableRow>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:textSize="24sp"
+                    android:background="@color/gray"
+                    android:textColor="@color/black"
+                    android:text="4" />
+                <TextView
+                    android:id="@+id/fourScore"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:textSize="24sp"
+                    android:background="@color/gray"
+                    android:textColor="@color/black"
+                    android:text=" " />
+                <TextView
+                    android:id="@+id/fourTime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:textSize="24sp"
+                    android:background="@color/gray"
+                    android:textColor="@color/black"
+                    android:text=" " />
+            </TableRow>
+            <TableRow>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:textSize="24sp"
+                    android:background="@color/gray"
+                    android:textColor="@color/black"
+                    android:text="5" />
+                <TextView
+                    android:id="@+id/fiveScore"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:textSize="24sp"
+                    android:background="@color/gray"
+                    android:textColor="@color/black"
+                    android:text=" " />
+                <TextView
+                    android:id="@+id/fiveTime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:textSize="24sp"
+                    android:background="@color/gray"
+                    android:textColor="@color/black"
+                    android:text=" " />
+            </TableRow>
+        </TableLayout>
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:visibility="invisible" />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.3"
+        android:visibility="invisible" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="2"
+        android:orientation="horizontal"
+        android:gravity="center_horizontal">
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/ok"
+            android:text="확인"
+            android:layout_marginRight="20dp"/>
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/reset"
+            android:text="초기화"
+            android:layout_marginLeft="20dp"/>
+    </LinearLayout>
+</LinearLayout>

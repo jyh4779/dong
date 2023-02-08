@@ -1,6 +1,7 @@
-package com.example.mytest;
+package co.kr.ddong;
 
-import android.database.sqlite.SQLiteConstraintException;
+import android.content.SharedPreferences;
+import android.icu.text.SimpleDateFormat;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -9,7 +10,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -19,7 +19,6 @@ import androidx.annotation.WorkerThread;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Random;
 
@@ -29,7 +28,7 @@ public class PlayActivity extends AppCompatActivity implements View.OnTouchListe
     int score = 0;
     int dungCount = 0;
     int hdlCount = 0;
-    int downspeed = 25;
+    int downspeed = 20;
     int level = 1;
 
     boolean stopFlag = false;
@@ -45,7 +44,7 @@ public class PlayActivity extends AppCompatActivity implements View.OnTouchListe
     dungHandler hdl[] = new dungHandler[30];
     dungHandler lvup = new dungHandler();
 
-
+    private SharedPreferences preferences, preftime;
 
     ConstraintLayout PlayLayout;
     LinearLayout EndLayout;
@@ -64,27 +63,7 @@ public class PlayActivity extends AppCompatActivity implements View.OnTouchListe
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
 
-        width = PlayLayout.getWidth();
-        //Log.i("onWidowsFocusChanged","width = "+String.valueOf(width));
-        height = PlayLayout.getHeight();
-        //Log.i("onWidowsFocusChanged","height = "+String.valueOf(height));
-
-        zolaWidth = width/8;
-        //Log.i("onWidowsFocusChanged","zolaWidth = "+String.valueOf(zolaWidth));
-        zolaHeight = height/9;
-        //Log.i("onWidowsFocusChanged","zolaHeight = "+String.valueOf(zolaHeight));
-        zolaX = width/2-zolaWidth/8;
-        //Log.i("onWidowsFocusChanged","zolaX = "+String.valueOf(zolaX));
-        zolaY = height-zolaHeight;
-        //Log.i("onWidowsFocusChanged","zolaY = "+String.valueOf(zolaY));
-
-        zola = new ImageView(this);
-        zola.setX(zolaX);
-        zola.setY(zolaY);
-        zola.setImageResource(R.drawable.zolaman);
-        PlayLayout.addView(zola, new ConstraintLayout.LayoutParams(zolaWidth, zolaHeight));
-        Log.i(String.valueOf(this), "add zola"+zolaX+", "+zolaY);
-
+        zolaInit();
 
         scoreText = (TextView) findViewById(R.id.jumsu);
         scoreText.setText(String.valueOf(score));
@@ -123,14 +102,14 @@ public class PlayActivity extends AppCompatActivity implements View.OnTouchListe
         if(!stopFlag) {
             if (event.getAction() == MotionEvent.ACTION_DOWN) {
                 touchX = event.getX();
-                //Log.i("onTouch", "ACTION_DOWN, touchX = "+touchX);
+                //Log.d("onTouch", "ACTION_DOWN, touchX = "+touchX);
                 return true;
             } else if (event.getAction() == MotionEvent.ACTION_MOVE) {
-                //Log.i("onTouch", "ACTION_MOVE");
+                //Log.d("onTouch", "ACTION_MOVE");
                 touchX = event.getX();
                 if (touchX > 0 && touchX < w) zola.setX(touchX);
-                //Log.i("onTouch", "ACTION_MOVE, touchX = "+touchX);
-                //Log.i("onTouch", "ACTION_MOVE, zolaX = "+zola.getX());
+                //Log.d("onTouch", "ACTION_MOVE, touchX = "+touchX);
+                //Log.d("onTouch", "ACTION_MOVE, zolaX = "+zola.getX());
                 return true;
             }
         }
@@ -285,7 +264,6 @@ public class PlayActivity extends AppCompatActivity implements View.OnTouchListe
                     int dungEndCount = bundle.getInt("dungEndCount");
 
                     score += 1;
-                    downspeed += level;
                     scoreText.setText(String.valueOf(score));
                     Log.i(String.valueOf(this), "dungHandler, dung[ = " + dungEndCount+"] is Over!");
                     Log.i(String.valueOf(this), "dungHandler, Score = "+score);
@@ -297,6 +275,7 @@ public class PlayActivity extends AppCompatActivity implements View.OnTouchListe
                     break;
                 case 3:
                     lvBoard.setText(String.valueOf(level)+"단계");
+                    downspeed += 5;
                     break;
             }
         }
@@ -333,27 +312,91 @@ public class PlayActivity extends AppCompatActivity implements View.OnTouchListe
         }
     }
     private void save_values() {
-        Thread t = new Thread(() -> {
-            RoomDB database = RoomDB.getInstance(this);
-            DDongData data = new DDongData();
+        int dNewScoreLank;
+        int dPutInt;
+        int dBeforeScoreLank = 5;
 
-            long now = System.currentTimeMillis();
-            Date date = new Date(now);
-            SimpleDateFormat sdf = new SimpleDateFormat("MM/dd hh:mm");
-            String getTime = sdf.format(date);
+        String getTime = null;
 
+        dNewScoreLank = check_score_empty();
+        if(dNewScoreLank == 6){
+            Log.i(String.valueOf(this), score+ " is lose");
+            return;
+        }
 
-            EditText editName = (EditText) findViewById(R.id.editName);
-            data.setNAME(String.valueOf(editName.getText()));
-            data.setSCORE(score);
-            data.setPLAY_TIME(getTime);
-            try {
-                database.mainDao().insert(data);
-            } catch (SQLiteConstraintException e) {
-                Log.d(String.valueOf(this), e.getMessage());
+        preferences = getSharedPreferences("GameScore", MODE_PRIVATE);
+        preftime = getSharedPreferences("GameTime", MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        SharedPreferences.Editor timeeditor = preftime.edit();
+
+        while(dBeforeScoreLank >= dNewScoreLank){
+            if(dBeforeScoreLank > dNewScoreLank){
+                if(!(preferences.getInt(String.valueOf(dBeforeScoreLank),0)==0)) {
+                    dPutInt = dBeforeScoreLank - 1;
+                    editor.putInt(String.valueOf(dBeforeScoreLank), preferences.getInt(String.valueOf(dPutInt), -1));
+                }
+                dBeforeScoreLank--;
             }
-            database.close();
-        });
-        t.start();
+            else if(dBeforeScoreLank == dNewScoreLank){
+                long now = System.currentTimeMillis();
+                Date date = new Date(now);
+                SimpleDateFormat sdf = null;
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+                    sdf = new SimpleDateFormat("MM/dd hh:mm");
+                    getTime = sdf.format(date);
+                }
+
+                editor.putInt(String.valueOf(dBeforeScoreLank),score);
+                timeeditor.putString(String.valueOf(score),getTime);
+                break;
+            }
+        }
+        editor.commit();
+        timeeditor.commit();
+        return;
+    }
+    public int check_score_empty(){
+        int dScoreLank = 1;
+        preferences = getSharedPreferences("GameScore", MODE_PRIVATE);
+        while (dScoreLank < 6) {
+            if (preferences.getInt(String.valueOf(dScoreLank), -1) == -1) {
+                Log.i(String.valueOf(this), "Lank[" + dScoreLank + "] is Empty");
+                return dScoreLank;
+            }
+            else if (preferences.getInt(String.valueOf(dScoreLank), -1) >= score){
+                Log.i(String.valueOf(this), "Lank[" + dScoreLank + "] is win");
+                dScoreLank++;
+            }
+            else if (preferences.getInt(String.valueOf(dScoreLank), -1) < score){
+                Log.i(String.valueOf(this), score+ " is better than Lank["+dScoreLank+"]");
+                return dScoreLank;
+            }
+        }
+        return dScoreLank;
+    }
+    public void zolaInit(){
+        width = PlayLayout.getWidth();
+        //Log.i("onWidowsFocusChanged","width = "+String.valueOf(width));
+        height = PlayLayout.getHeight();
+        //Log.i("onWidowsFocusChanged","height = "+String.valueOf(height));
+
+        zolaWidth = width/8;
+        //Log.i("onWidowsFocusChanged","zolaWidth = "+String.valueOf(zolaWidth));
+        zolaHeight = height/9;
+        //Log.i("onWidowsFocusChanged","zolaHeight = "+String.valueOf(zolaHeight));
+        zolaX = width/2-zolaWidth/8;
+        //Log.i("onWidowsFocusChanged","zolaX = "+String.valueOf(zolaX));
+        zolaY = height-zolaHeight;
+        //Log.i("onWidowsFocusChanged","zolaY = "+String.valueOf(zolaY));
+
+        //zola = new ImageView(this);
+        zola = (ImageView)findViewById(R.id.zola);
+        //zola.setX(zolaX);
+        //zola.setY(zolaY);
+        zola.getLayoutParams().width=zolaWidth;
+        zola.getLayoutParams().height=zolaHeight;
+        //zola.setImageResource(R.drawable.zolaman);
+        //PlayLayout.addView(zola, new ConstraintLayout.LayoutParams(zolaWidth, zolaHeight));
+        Log.i(String.valueOf(this), "add zola"+zolaX+", "+zolaY);
     }
 }

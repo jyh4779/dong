@@ -1,4 +1,4 @@
-package com.example.mytest;
+package co.kr.ddong;
 
 import android.content.Intent;
 import android.os.Bundle;
