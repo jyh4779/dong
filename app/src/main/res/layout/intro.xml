@@ -11,12 +11,22 @@
         android:src="@drawable/intro"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+    
+    <ImageView
+        android:id="@+id/btn_kakaoLogin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="50dp"
+        android:src="@drawable/kakao_login"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
 
     <TextView
         android:id="@+id/introStart"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="로딩 중..."
+        android:visibility="invisible"
         app:layout_constraintLeft_toLeftOf="@id/introImage"
         app:layout_constraintRight_toRightOf="@id/introImage"
         app:layout_constraintBottom_toBottomOf="@id/introImage"

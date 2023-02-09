@@ -2,12 +2,14 @@ package co.kr.ddong;
 
 import android.app.Application;
 
+import com.kakao.sdk.common.KakaoSdk;
+
 public class kakaoApplication extends Application {
 
     @Override
     public void onCreate(){
         super.onCreate();
         // Kakao SDK 초기화
-        //KakaoSdk.init(this,"@kakao_app_key");
+        KakaoSdk.init(this,"972f64eb642c4e85a2f0dc6804182790");
     }
 }
