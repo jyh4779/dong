@@ -107,10 +107,17 @@ public class PlayActivity extends AppCompatActivity implements View.OnTouchListe
             } else if (event.getAction() == MotionEvent.ACTION_MOVE) {
                 //Log.d("onTouch", "ACTION_MOVE");
                 touchX = event.getX();
-                if (touchX > 0 && touchX < w) zola.setX(touchX);
+                if (touchX > 0 && touchX < w) {
+                    if(touchX > zola.getX())zola.setImageResource(R.drawable.zola_left);
+                    else if(touchX < zola.getX())zola.setImageResource(R.drawable.zola_right);
+                    else if(touchX == zola.getX())zola.setImageResource(R.drawable.zolaman);
+                    zola.setX(touchX);
+                }
                 //Log.d("onTouch", "ACTION_MOVE, touchX = "+touchX);
                 //Log.d("onTouch", "ACTION_MOVE, zolaX = "+zola.getX());
                 return true;
+            } else if (event.getAction() == MotionEvent.ACTION_UP) {
+                zola.setImageResource(R.drawable.zolaman);
             }
         }
         return false;
@@ -234,11 +241,15 @@ public class PlayActivity extends AppCompatActivity implements View.OnTouchListe
                     float dungInitX = bundle.getFloat("dungX");
                     float dungInitY = bundle.getFloat("dungY");
                     int dungInitCount = bundle.getInt("dungInitCount");
+                    int dungRandomImage = Math.floorMod((int)dungInitX,3);
                     //Log.i(String.valueOf(this), "dungHandler, Receive DungCount["+dungInitCount+"]");
 
                     dung[dungCount].setX(dungInitX);
                     dung[dungCount].setY(dungInitY);
-                    dung[dungCount].setImageResource(R.drawable.ddong);
+                    if(dungRandomImage == 0) dung[dungCount].setImageResource(R.drawable.ddong1);
+                    else if(dungRandomImage == 1) dung[dungCount].setImageResource(R.drawable.ddong2);
+                    else if(dungRandomImage == 2) dung[dungCount].setImageResource(R.drawable.ddong3);
+                    else dung[dungCount].setImageResource(R.drawable.ddong);
                     Log.i(String.valueOf(this), "dungHandler, ImageInitial dung["+dungInitCount+"]");
 
                     PlayLayout.addView(dung[dungInitCount], new ConstraintLayout.LayoutParams(dungWidth, dungHeight));

@@ -1,12 +1,21 @@
 package co.kr.ddong;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.Signature;
 import android.os.Bundle;
+import android.util.Base64;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 
 public class MainActivity extends AppCompatActivity {
     //레이아웃 넓이, 레이아웃 높이
@@ -30,6 +39,8 @@ public class MainActivity extends AppCompatActivity {
         btnStart = (Button) findViewById(R.id.start);
         btnOption = (Button) findViewById(R.id.option);
         btnRecord = (Button) findViewById(R.id.record);
+
+        Log.d("getKeyHash", ""+getKeyHash(MainActivity.this));
     }
 
     @Override
@@ -54,6 +65,27 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+    }
+    public static String getKeyHash(final Context context){
+        PackageManager pm = context.getPackageManager();
+        try{
+            PackageInfo packageInfo = pm.getPackageInfo(context.getPackageName(), PackageManager.GET_SIGNATURES);
+            if(packageInfo == null)
+                return null;
+
+            for (Signature signature : packageInfo.signatures) {
+                try {
+                    MessageDigest md = MessageDigest.getInstance("SHA");
+                    md.update(signature.toByteArray());
+                    return android.util.Base64.encodeToString(md.digest(), Base64.NO_WRAP);
+                }catch (NoSuchAlgorithmException e){
+                    e.printStackTrace();
+                }
+            }
+        }catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 };
 
