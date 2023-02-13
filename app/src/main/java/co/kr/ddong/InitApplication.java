@@ -55,6 +55,9 @@ public class InitApplication extends AppCompatActivity {
             }
         });
 
+        DsClient dsClient = new DsClient();
+        dsClient.ClientThread.start(1,"");
+
         introImage.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 Intent intent= new Intent(getApplicationContext(), MainActivity.class);
