@@ -1,7 +1,6 @@
 package co.kr.ddong;
 
 import android.content.SharedPreferences;
-import android.icu.text.SimpleDateFormat;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -19,7 +18,6 @@ import androidx.annotation.WorkerThread;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
-import java.util.Date;
 import java.util.Random;
 
 public class PlayActivity extends AppCompatActivity implements View.OnTouchListener {
@@ -323,6 +321,10 @@ public class PlayActivity extends AppCompatActivity implements View.OnTouchListe
         }
     }
     private void save_values() {
+        
+    }
+    /*
+    private void save_values() {
         int dNewScoreLank;
         int dPutInt;
         int dBeforeScoreLank = 5;
@@ -384,7 +386,7 @@ public class PlayActivity extends AppCompatActivity implements View.OnTouchListe
             }
         }
         return dScoreLank;
-    }
+    }*/
     public void zolaInit(){
         width = PlayLayout.getWidth();
         //Log.i("onWidowsFocusChanged","width = "+String.valueOf(width));
