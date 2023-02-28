@@ -1,6 +1,7 @@
 package co.kr.ddong;
 
 import android.content.SharedPreferences;
+import android.icu.text.SimpleDateFormat;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -12,12 +13,22 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.annotation.WorkerThread;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.PrintWriter;
+import java.net.Socket;
+import java.net.UnknownHostException;
+import java.util.Date;
 import java.util.Random;
 
 public class PlayActivity extends AppCompatActivity implements View.OnTouchListener {
@@ -28,6 +39,7 @@ public class PlayActivity extends AppCompatActivity implements View.OnTouchListe
     int hdlCount = 0;
     int downspeed = 20;
     int level = 1;
+    int dSvrRet = 0;
 
     boolean stopFlag = false;
 
@@ -42,7 +54,7 @@ public class PlayActivity extends AppCompatActivity implements View.OnTouchListe
     dungHandler hdl[] = new dungHandler[30];
     dungHandler lvup = new dungHandler();
 
-    private SharedPreferences preferences, preftime;
+    private SharedPreferences preferences, preftime, accountpref;
 
     ConstraintLayout PlayLayout;
     LinearLayout EndLayout;
@@ -321,7 +333,89 @@ public class PlayActivity extends AppCompatActivity implements View.OnTouchListe
         }
     }
     private void save_values() {
-        
+        String host = "52.192.140.126";
+        int port = 9999;
+
+        String msg = null;
+
+        accountpref = getSharedPreferences("KakaoAccount", MODE_PRIVATE);
+        Log.i(String.valueOf(this), "Score Send Thread Start");
+
+        try {
+            Socket socket = new Socket(host,port);
+            Log.i(String.valueOf(this), "Make socket ["+host+"]["+port+"]");
+
+
+            InputStream is = socket.getInputStream();
+            OutputStream os = socket.getOutputStream();
+            PrintWriter pw;
+            BufferedReader reader;
+
+            msg = "2,"+
+                    accountpref.getLong("ID",-1)+","+
+                    String.valueOf(score);
+
+            pw=new PrintWriter(os);
+            pw.println(msg);
+            pw.flush();
+
+            pw.println("done");
+            pw.flush();
+
+            reader = new BufferedReader(new InputStreamReader(is));
+
+            while((msg = reader.readLine()) != null) {
+                Log.i(String.valueOf(this), "svrmsg is [" + msg + "]");
+                if (msg.equals("1")) {
+                    Log.i(String.valueOf(this), "Server return Success");
+                    break;
+                }else {
+                    Log.i(String.valueOf(this), "Score Data send Fail");
+                    dSvrRet = Integer.valueOf(msg);
+                    score_local_save();
+                    break;
+                }
+            }
+            pw.close();
+            socket.close();
+        } catch (UnknownHostException e) {
+            Toast.makeText(PlayActivity.this, "서버와 연결에 실패하였습니다.", Toast.LENGTH_SHORT).show();
+            e.printStackTrace();
+        } catch (IOException e) {
+            Toast.makeText(PlayActivity.this, "서버와 연결에 실패하였습니다.", Toast.LENGTH_SHORT).show();
+            e.printStackTrace();
+        }
+    }
+    void score_local_save(){
+        int n = 0;
+        String getTime = null;
+
+        preferences = getSharedPreferences("GameScore", MODE_PRIVATE);
+        preftime = getSharedPreferences("GameTime", MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        SharedPreferences.Editor timeeditor = preftime.edit();
+
+        while(true){
+            if(preferences.getInt(String.valueOf(n),-1) == -1){
+                Log.i(String.valueOf(this), "Score Index["+n+"] is empty");
+                break;
+            }
+            Log.i(String.valueOf(this), "Score Index["+n+"] is "+preferences.getInt(String.valueOf(n),-1));
+            n++;
+        }
+        long now = System.currentTimeMillis();
+        Date date = new Date(now);
+        SimpleDateFormat sdf = null;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+            sdf = new SimpleDateFormat("MM/dd hh:mm");
+            getTime = sdf.format(date);
+        }
+        editor.putInt(String.valueOf(n),score);
+        timeeditor.putString(String.valueOf(score),getTime);
+
+        editor.commit();
+        timeeditor.commit();
+        return;
     }
     /*
     private void save_values() {
