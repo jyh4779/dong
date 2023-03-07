@@ -81,7 +81,7 @@ public class PlayActivity extends AppCompatActivity implements View.OnTouchListe
         endScore = (TextView) findViewById(R.id.endScore);
         lvBoard = (TextView) findViewById(R.id.levelBoard);
 
-        zola.setOnTouchListener(this);
+        PlayLayout.setOnTouchListener(this);
 
         while(hdlCount < 30) {
             dung[hdlCount] = new ImageView(this);

@@ -68,12 +68,20 @@ public class LoginActivity extends AppCompatActivity {
 
         ClientThread clientThread = new ClientThread();
 
+
+
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
                 .requestEmail()
                 .build();
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
+
         mAuth = FirebaseAuth.getInstance();
+        if (mAuth != null) {
+            Log.i(String.valueOf(LoginActivity.this), "mAuth is exist");
+        }
+
+
 
         signInButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -81,6 +89,7 @@ public class LoginActivity extends AppCompatActivity {
                 signIn();
                 mUser = mAuth.getCurrentUser();
                 if (mUser != null) {
+                    updateUI(mUser);
                     Log.i(String.valueOf(LoginActivity.this), "mUser is exist");
                     clientThread.start();
                 }else{
@@ -101,7 +110,6 @@ public class LoginActivity extends AppCompatActivity {
 
     }
     private void signIn() {
-        updateUI(mUser);
         Intent signInIntent = mGoogleSignInClient.getSignInIntent();
         startActivityForResult(signInIntent, RC_SIGN_IN);
     }
@@ -131,6 +139,7 @@ public class LoginActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
                             Toast.makeText(LoginActivity.this, "로그인 성공ㅋ", Toast.LENGTH_SHORT).show();
+                            mUser = mAuth.getCurrentUser();
                             updateUI(mUser);
                         } else {
                             // If sign in fails, display a message to the user.
@@ -164,6 +173,8 @@ public class LoginActivity extends AppCompatActivity {
             //Intent intent = new Intent(this, MainActivity.class);
             //startActivity(intent);
             //finish();
+        }else{
+            Log.i(String.valueOf(LoginActivity.this), "[updateUI] FirebaseUser is null");
         }
     }
     class ClientThread extends Thread {
