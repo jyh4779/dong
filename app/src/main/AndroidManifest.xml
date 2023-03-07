@@ -7,17 +7,18 @@
 
     <application
         android:name=".kakaoApplication"
-        android:allowBackup="true"
+        android:allowBackup="false"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@drawable/ddong"
-        android:label="똥피하기"
+        android:label="@string/app_name"
         android:roundIcon="@drawable/intro"
         android:supportsRtl="true"
         android:theme="@style/Theme.MyTest"
         tools:targetApi="31">
         <activity
-            android:name="co.kr.ddong.InitApplication"
+            android:name="co.kr.ddong.LoginActivity"
+            android:allowBackup="false"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -37,6 +38,10 @@
          </activity>
         <activity
             android:name="co.kr.ddong.RecordActivity"
+            android:exported="true">
+        </activity>
+        <activity
+            android:name="co.kr.ddong.Record2Activity"
             android:exported="true">
         </activity>
         <activity android:name="com.kakao.sdk.auth.AuthCodeHandlerActivity"

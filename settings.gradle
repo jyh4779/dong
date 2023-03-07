@@ -12,6 +12,7 @@ dependencyResolutionManagement {
         mavenCentral()
         jcenter()
         maven { url 'https://devrepo.kakao.com/nexus/content/groups/public/' } // 카카오
+        maven { url 'https://jitpack.io' }
     }
 }
 rootProject.name = "My Test"

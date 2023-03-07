@@ -81,7 +81,7 @@ public class PlayActivity extends AppCompatActivity implements View.OnTouchListe
         endScore = (TextView) findViewById(R.id.endScore);
         lvBoard = (TextView) findViewById(R.id.levelBoard);
 
-        PlayLayout.setOnTouchListener(this);
+        zola.setOnTouchListener(this);
 
         while(hdlCount < 30) {
             dung[hdlCount] = new ImageView(this);
@@ -90,15 +90,18 @@ public class PlayActivity extends AppCompatActivity implements View.OnTouchListe
         }
         lvup = new dungHandler();
 
+        ScoreThread scoreThread = new ScoreThread();
         CountThread thread = new CountThread();
         thread.start();
 
         endBt = (Button) findViewById(R.id.endButton);
 
+
+
         endBt.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                save_values();
+                scoreThread.start();
                 finish();
             }
         });
@@ -332,58 +335,62 @@ public class PlayActivity extends AppCompatActivity implements View.OnTouchListe
             }
         }
     }
-    private void save_values() {
-        String host = "52.192.140.126";
-        int port = 9999;
+    class ScoreThread extends Thread {
+        public void run() {
+            String host = "52.192.140.126";
+            int port = 9999;
 
-        String msg = null;
+            String msg = null;
 
-        accountpref = getSharedPreferences("KakaoAccount", MODE_PRIVATE);
-        Log.i(String.valueOf(this), "Score Send Thread Start");
+            accountpref = getSharedPreferences("KakaoAccount", MODE_PRIVATE);
+            Log.i(String.valueOf(this), "Score Send Thread Start");
 
-        try {
-            Socket socket = new Socket(host,port);
-            Log.i(String.valueOf(this), "Make socket ["+host+"]["+port+"]");
+            try {
+                Log.i(String.valueOf(this), "Start socket [" + host + "][" + port + "]");
+                Socket socket = new Socket(host, port);
+                Log.i(String.valueOf(this), "Make socket [" + host + "][" + port + "]");
 
 
-            InputStream is = socket.getInputStream();
-            OutputStream os = socket.getOutputStream();
-            PrintWriter pw;
-            BufferedReader reader;
+                InputStream is = socket.getInputStream();
+                OutputStream os = socket.getOutputStream();
+                PrintWriter pw;
+                BufferedReader reader;
 
-            msg = "2,"+
-                    accountpref.getLong("ID",-1)+","+
-                    String.valueOf(score);
+                msg = "2," +
+                        accountpref.getString("ID", "-1") + "," +
+                        String.valueOf(score);
+                Log.i(String.valueOf(this), "Client MSG [" + msg + "]");
 
-            pw=new PrintWriter(os);
-            pw.println(msg);
-            pw.flush();
+                pw = new PrintWriter(os);
+                pw.println(msg);
+                pw.flush();
 
-            pw.println("done");
-            pw.flush();
+                pw.println("done");
+                pw.flush();
 
-            reader = new BufferedReader(new InputStreamReader(is));
+                reader = new BufferedReader(new InputStreamReader(is));
 
-            while((msg = reader.readLine()) != null) {
-                Log.i(String.valueOf(this), "svrmsg is [" + msg + "]");
-                if (msg.equals("1")) {
-                    Log.i(String.valueOf(this), "Server return Success");
-                    break;
-                }else {
-                    Log.i(String.valueOf(this), "Score Data send Fail");
-                    dSvrRet = Integer.valueOf(msg);
-                    score_local_save();
-                    break;
+                while ((msg = reader.readLine()) != null) {
+                    Log.i(String.valueOf(this), "svrmsg is [" + msg + "]");
+                    if (msg.equals("1")) {
+                        Log.i(String.valueOf(this), "Server return Success");
+                        break;
+                    } else {
+                        Log.i(String.valueOf(this), "Score Data send Fail");
+                        dSvrRet = Integer.valueOf(msg);
+                        score_local_save();
+                        break;
+                    }
                 }
+                pw.close();
+                socket.close();
+            } catch (UnknownHostException e) {
+                Toast.makeText(PlayActivity.this, "서버와 연결에 실패하였습니다.", Toast.LENGTH_SHORT).show();
+                e.printStackTrace();
+            } catch (IOException e) {
+                Toast.makeText(PlayActivity.this, "서버와 연결에 실패하였습니다.", Toast.LENGTH_SHORT).show();
+                e.printStackTrace();
             }
-            pw.close();
-            socket.close();
-        } catch (UnknownHostException e) {
-            Toast.makeText(PlayActivity.this, "서버와 연결에 실패하였습니다.", Toast.LENGTH_SHORT).show();
-            e.printStackTrace();
-        } catch (IOException e) {
-            Toast.makeText(PlayActivity.this, "서버와 연결에 실패하였습니다.", Toast.LENGTH_SHORT).show();
-            e.printStackTrace();
         }
     }
     void score_local_save(){

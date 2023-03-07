@@ -1,0 +1,510 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/menu"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="horizontal">
+        <Button
+            android:id="@+id/myScore"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="내 기록"
+            android:background="@color/gray"/>
+        <Button
+            android:id="@+id/friendsScore"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="친구 없음"
+            android:background="#666666"/>
+        <Button
+            android:id="@+id/worldScore"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="전체 기록"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="8">
+        <TableLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="top"
+            android:stretchColumns="1,2,3"
+            android:orientation="vertical"
+            android:background="@color/black" >
+            <TableRow
+                android:layout_weight="0.5">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:textSize="24sp"
+                    android:background="@color/gray"
+                    android:textColor="@color/black"
+                    android:layout_margin="1.5dp"
+                    android:text="순위" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:textSize="24sp"
+                    android:background="@color/gray"
+                    android:textColor="@color/black"
+                    android:layout_margin="1.5dp"
+                    android:text="이름" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:textSize="24sp"
+                    android:background="@color/gray"
+                    android:textColor="@color/black"
+                    android:layout_margin="1.5dp"
+                    android:text="점수" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:textSize="24sp"
+                    android:background="@color/gray"
+                    android:textColor="@color/black"
+                    android:layout_margin="1.5dp"
+                    android:text="게임시간" />
+            </TableRow>
+            <TableRow
+                android:layout_weight="1">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:textSize="24sp"
+                    android:background="@color/gray"
+                    android:textColor="@color/black"
+                    android:layout_margin="1.5dp"
+                    android:text="1" />
+                <TextView
+                    android:id="@+id/oneName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:textSize="24sp"
+                    android:background="@color/gray"
+                    android:textColor="@color/black"
+                    android:layout_margin="1.5dp"
+                    android:text=" " />
+                <TextView
+                    android:id="@+id/oneScore"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:textSize="24sp"
+                    android:background="@color/gray"
+                    android:textColor="@color/black"
+                    android:layout_margin="1.5dp"
+                    android:text=" " />
+                <TextView
+                    android:id="@+id/oneTime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:textSize="24sp"
+                    android:background="@color/gray"
+                    android:textColor="@color/black"
+                    android:layout_margin="1.5dp"
+                    android:text=" " />
+            </TableRow>
+            <TableRow
+                android:layout_weight="1">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:textSize="24sp"
+                    android:background="@color/gray"
+                    android:textColor="@color/black"
+                    android:layout_margin="1.5dp"
+                    android:text="2" />
+                <TextView
+                    android:id="@+id/twoName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:textSize="24sp"
+                    android:background="@color/gray"
+                    android:textColor="@color/black"
+                    android:layout_margin="1.5dp"
+                    android:text=" " />
+                <TextView
+                    android:id="@+id/twoScore"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:textSize="24sp"
+                    android:background="@color/gray"
+                    android:textColor="@color/black"
+                    android:layout_margin="1.5dp"
+                    android:text=" " />
+                <TextView
+                    android:id="@+id/twoTime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:textSize="24sp"
+                    android:background="@color/gray"
+                    android:textColor="@color/black"
+                    android:layout_margin="1.5dp"
+                    android:text=" " />
+            </TableRow>
+            <TableRow
+                android:layout_weight="1">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:textSize="24sp"
+                    android:background="@color/gray"
+                    android:textColor="@color/black"
+                    android:layout_margin="1.5dp"
+                    android:text="3" />
+                <TextView
+                    android:id="@+id/threeName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:textSize="24sp"
+                    android:background="@color/gray"
+                    android:textColor="@color/black"
+                    android:layout_margin="1.5dp"
+                    android:text=" " />
+                <TextView
+                    android:id="@+id/threeScore"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:textSize="24sp"
+                    android:background="@color/gray"
+                    android:textColor="@color/black"
+                    android:layout_margin="1.5dp"
+                    android:text=" " />
+                <TextView
+                    android:id="@+id/threeTime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:textSize="24sp"
+                    android:background="@color/gray"
+                    android:textColor="@color/black"
+                    android:layout_margin="1.5dp"
+                    android:text=" " />
+            </TableRow>
+            <TableRow
+                android:layout_weight="1">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:textSize="24sp"
+                    android:background="@color/gray"
+                    android:textColor="@color/black"
+                    android:layout_margin="1.5dp"
+                    android:text="4" />
+                <TextView
+                    android:id="@+id/fourName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:textSize="24sp"
+                    android:background="@color/gray"
+                    android:textColor="@color/black"
+                    android:layout_margin="1.5dp"
+                    android:text=" " />
+                <TextView
+                    android:id="@+id/fourScore"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:textSize="24sp"
+                    android:background="@color/gray"
+                    android:textColor="@color/black"
+                    android:layout_margin="1.5dp"
+                    android:text=" " />
+                <TextView
+                    android:id="@+id/fourTime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:textSize="24sp"
+                    android:background="@color/gray"
+                    android:textColor="@color/black"
+                    android:layout_margin="1.5dp"
+                    android:text=" " />
+            </TableRow>
+            <TableRow
+                android:layout_weight="1">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:textSize="24sp"
+                    android:background="@color/gray"
+                    android:textColor="@color/black"
+                    android:layout_margin="1.5dp"
+                    android:text="5" />
+                <TextView
+                    android:id="@+id/fiveName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:textSize="24sp"
+                    android:background="@color/gray"
+                    android:textColor="@color/black"
+                    android:layout_margin="1.5dp"
+                    android:text=" " />
+                <TextView
+                    android:id="@+id/fiveScore"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:textSize="24sp"
+                    android:background="@color/gray"
+                    android:textColor="@color/black"
+                    android:layout_margin="1.5dp"
+                    android:text=" " />
+                <TextView
+                    android:id="@+id/fiveTime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:textSize="24sp"
+                    android:background="@color/gray"
+                    android:textColor="@color/black"
+                    android:layout_margin="1.5dp"
+                    android:text=" " />
+            </TableRow>
+            <TableRow
+                android:layout_weight="1">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:textSize="24sp"
+                    android:background="@color/gray"
+                    android:textColor="@color/black"
+                    android:layout_margin="1.5dp"
+                    android:text="6" />
+                <TextView
+                    android:id="@+id/sixName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:textSize="24sp"
+                    android:background="@color/gray"
+                    android:textColor="@color/black"
+                    android:layout_margin="1.5dp"
+                    android:text=" " />
+                <TextView
+                    android:id="@+id/sixScore"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:textSize="24sp"
+                    android:background="@color/gray"
+                    android:textColor="@color/black"
+                    android:layout_margin="1.5dp"
+                    android:text=" " />
+                <TextView
+                    android:id="@+id/sixTime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:textSize="24sp"
+                    android:background="@color/gray"
+                    android:textColor="@color/black"
+                    android:layout_margin="1.5dp"
+                    android:text=" " />
+            </TableRow>
+            <TableRow
+                android:layout_weight="1">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:textSize="24sp"
+                    android:background="@color/gray"
+                    android:textColor="@color/black"
+                    android:layout_margin="1.5dp"
+                    android:text="7" />
+                <TextView
+                    android:id="@+id/sevenName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:textSize="24sp"
+                    android:background="@color/gray"
+                    android:textColor="@color/black"
+                    android:layout_margin="1.5dp"
+                    android:text=" " />
+                <TextView
+                    android:id="@+id/sevenScore"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:textSize="24sp"
+                    android:background="@color/gray"
+                    android:textColor="@color/black"
+                    android:layout_margin="1.5dp"
+                    android:text=" " />
+                <TextView
+                    android:id="@+id/sevenTime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:textSize="24sp"
+                    android:background="@color/gray"
+                    android:textColor="@color/black"
+                    android:layout_margin="1.5dp"
+                    android:text=" " />
+            </TableRow>
+            <TableRow
+                android:layout_weight="1">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:textSize="24sp"
+                    android:background="@color/gray"
+                    android:textColor="@color/black"
+                    android:layout_margin="1.5dp"
+                    android:text="8" />
+                <TextView
+                    android:id="@+id/eightName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:textSize="24sp"
+                    android:background="@color/gray"
+                    android:textColor="@color/black"
+                    android:layout_margin="1.5dp"
+                    android:text=" " />
+                <TextView
+                    android:id="@+id/eightScore"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:textSize="24sp"
+                    android:background="@color/gray"
+                    android:textColor="@color/black"
+                    android:layout_margin="1.5dp"
+                    android:text=" " />
+                <TextView
+                    android:id="@+id/eightTime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:textSize="24sp"
+                    android:background="@color/gray"
+                    android:textColor="@color/black"
+                    android:layout_margin="1.5dp"
+                    android:text=" " />
+            </TableRow>
+            <TableRow
+                android:layout_weight="1">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:textSize="24sp"
+                    android:background="@color/gray"
+                    android:textColor="@color/black"
+                    android:layout_margin="1.5dp"
+                    android:text="9" />
+                <TextView
+                    android:id="@+id/nineName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:textSize="24sp"
+                    android:background="@color/gray"
+                    android:textColor="@color/black"
+                    android:layout_margin="1.5dp"
+                    android:text=" " />
+                <TextView
+                    android:id="@+id/nineScore"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:textSize="24sp"
+                    android:background="@color/gray"
+                    android:textColor="@color/black"
+                    android:layout_margin="1.5dp"
+                    android:text=" " />
+                <TextView
+                    android:id="@+id/nineTime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:textSize="24sp"
+                    android:background="@color/gray"
+                    android:textColor="@color/black"
+                    android:layout_margin="1.5dp"
+                    android:text=" " />
+            </TableRow>
+            <TableRow
+                android:layout_weight="1">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:textSize="24sp"
+                    android:background="@color/gray"
+                    android:textColor="@color/black"
+                    android:layout_margin="1.5dp"
+                    android:text="10" />
+                <TextView
+                    android:id="@+id/tenName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:textSize="24sp"
+                    android:background="@color/gray"
+                    android:textColor="@color/black"
+                    android:layout_margin="1.5dp"
+                    android:text=" " />
+                <TextView
+                    android:id="@+id/tenScore"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:textSize="24sp"
+                    android:background="@color/gray"
+                    android:textColor="@color/black"
+                    android:layout_margin="1.5dp"
+                    android:text=" " />
+                <TextView
+                    android:id="@+id/tenTime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:textSize="24sp"
+                    android:background="@color/gray"
+                    android:textColor="@color/black"
+                    android:layout_margin="1.5dp"
+                    android:text=" " />
+            </TableRow>
+
+        </TableLayout>
+    </LinearLayout>
+
+</LinearLayout>

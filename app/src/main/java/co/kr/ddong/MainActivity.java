@@ -58,10 +58,10 @@ public class MainActivity extends AppCompatActivity {
                 }
         });
 
-        //옵션 버튼 클릭 이벤트
+        //기록 버튼 클릭 이벤트
         btnRecord.setOnClickListener(new View.OnClickListener(){
             public void onClick(View view ) {
-                Intent intent= new Intent(getApplicationContext(), RecordActivity.class);
+                Intent intent= new Intent(getApplicationContext(), Record2Activity.class);
                 startActivity(intent);
             }
         });
