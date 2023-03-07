@@ -67,7 +67,7 @@ public class LoginActivity extends AppCompatActivity {
 
 
         ClientThread clientThread = new ClientThread();
-
+        Toast.makeText(LoginActivity.this, "로그인화면 시작.", Toast.LENGTH_SHORT).show();
 
 
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
