@@ -70,7 +70,7 @@ public class InitApplication extends AppCompatActivity {
             }
         };*/
 
-        signInButton = findViewById(R.id.googleLoginBtn);
+//        signInButton = findViewById(R.id.googleLoginBtn);
 
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id2))
