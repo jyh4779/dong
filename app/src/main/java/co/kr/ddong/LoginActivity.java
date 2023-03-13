@@ -2,11 +2,9 @@ package co.kr.ddong;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -17,6 +15,8 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -48,7 +48,8 @@ public class LoginActivity extends AppCompatActivity {
 
     TextView introStartTV;
     ImageView introImage;
-    Button updateBt;
+    //Button updateBt;
+    //LinearLayout updateLL;
 
     private SharedPreferences preferences, accountpref;
 
@@ -72,7 +73,8 @@ public class LoginActivity extends AppCompatActivity {
         introImage = (ImageView) findViewById(R.id.introImage);
         introStartTV = (TextView) findViewById(R.id.introStart);
         signInButton = (SignInButton) findViewById(R.id.googleLoginBtn);
-        updateBt = (Button) findViewById(R.id.updateBtn);
+        //updateBt = (Button) findViewById(R.id.updateBtn);
+        //updateLL = (LinearLayout) findViewById(R.id.updateDialog);
 
         CheckClientVersion checkClientVersion = new CheckClientVersion();
 
@@ -81,74 +83,78 @@ public class LoginActivity extends AppCompatActivity {
         try{
             checkClientVersion.join();
         }catch (InterruptedException e){
-            dCheckVersionFlag = 1;
-            if (dCheckVersionFlag == 0){
-                Log.d(String.valueOf(this), "Client_version is current");
-            }else{
-                updateBt.setVisibility(View.VISIBLE);
-                updateBt.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        Intent intent = new Intent(Intent.ACTION_VIEW);
-                        intent.setData(Uri.parse("market://details?id=co.kr.ddong&hl=en-US&ah=FCSk0q07NZNsREPtF2cEiwBAue4"));
-                        startActivity(intent);
-                    }
-                });
+        }
+        dCheckVersionFlag = 1;
+        if (dCheckVersionFlag == 0){
+            Log.d(String.valueOf(this), "Client_version is current");
+
+
+            signInButton.setVisibility(View.VISIBLE);
+
+            mAuth = FirebaseAuth.getInstance();
+            if (mAuth.getCurrentUser() != null) {
+                Log.i(String.valueOf(LoginActivity.this), "mAuth is exist");
+                //Toast.makeText(LoginActivity.this, "mAuth is exist", Toast.LENGTH_SHORT).show();
+            } else {
+                Log.i(String.valueOf(LoginActivity.this), "mAuth is null");
+                //Toast.makeText(LoginActivity.this, "mAuth is null", Toast.LENGTH_SHORT).show();
             }
-        }
-
-        signInButton.setVisibility(View.VISIBLE);
-
-        mAuth = FirebaseAuth.getInstance();
-        if (mAuth.getCurrentUser() != null) {
-            Log.i(String.valueOf(LoginActivity.this), "mAuth is exist");
-            //Toast.makeText(LoginActivity.this, "mAuth is exist", Toast.LENGTH_SHORT).show();
-        } else {
-            Log.i(String.valueOf(LoginActivity.this), "mAuth is null");
-            //Toast.makeText(LoginActivity.this, "mAuth is null", Toast.LENGTH_SHORT).show();
-        }
-        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken(getString(R.string.default_web_client_id))
-                .requestEmail()
-                .build();
-        mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
+            GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                    .requestIdToken(getString(R.string.default_web_client_id))
+                    .requestEmail()
+                    .build();
+            mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
 
 
-        Intent signInIntent = mGoogleSignInClient.getSignInIntent();
+            Intent signInIntent = mGoogleSignInClient.getSignInIntent();
 
-        signInButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //signIn(signInIntent);
-                mUser = mAuth.getCurrentUser();
-                if (mUser != null) {
-                    updateUI(mUser);
-                    Log.d(String.valueOf(LoginActivity.this), "mUser is exist");
-                    //Toast.makeText(LoginActivity.this, "mUser is exist", Toast.LENGTH_SHORT).show();
-                }else{
-                    activityResultLauncher.launch(signInIntent);
-                    //setResult(RESULT_OK, signInIntent);
+            signInButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
                     //signIn(signInIntent);
-                    Log.d(String.valueOf(LoginActivity.this), "mUser is null");
-                    //Toast.makeText(LoginActivity.this, "mUser is null", Toast.LENGTH_SHORT).show();
+                    mUser = mAuth.getCurrentUser();
+                    if (mUser != null) {
+                        updateUI(mUser);
+                        Log.d(String.valueOf(LoginActivity.this), "mUser is exist");
+                        //Toast.makeText(LoginActivity.this, "mUser is exist", Toast.LENGTH_SHORT).show();
+                    }else{
+                        activityResultLauncher.launch(signInIntent);
+                        //setResult(RESULT_OK, signInIntent);
+                        //signIn(signInIntent);
+                        Log.d(String.valueOf(LoginActivity.this), "mUser is null");
+                        //Toast.makeText(LoginActivity.this, "mUser is null", Toast.LENGTH_SHORT).show();
+                    }
                 }
-            }
-        });
+            });
 
 
-        introImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (dLoginFlag == 1) {
-                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                    startActivity(intent);
-                    finish();
-                } else {
-                    Toast.makeText(LoginActivity.this, "서버 연결이 되지 않습니다. 관리자에게 문의하십시오.", Toast.LENGTH_SHORT).show();
+            introImage.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (dLoginFlag == 1) {
+                        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                        startActivity(intent);
+                        finish();
+                    } else {
+                        Toast.makeText(LoginActivity.this, "서버 연결이 되지 않습니다. 관리자에게 문의하십시오.", Toast.LENGTH_SHORT).show();
+                    }
                 }
-            }
-        });
+            });
+        }else{
+            Log.d(String.valueOf(this), "Client_version is not current");
+            ConnUpdateFrg connUpdate_frg = new ConnUpdateFrg();
+            Log.d(String.valueOf(this), "11111111");
 
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            Log.d(String.valueOf(this), "2222222222");
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            Log.d(String.valueOf(this), "333333333");
+
+            fragmentTransaction.add(R.id.updateFrame,connUpdate_frg);
+            Log.d(String.valueOf(this), "444444444444");
+            fragmentTransaction.commit();
+            Log.d(String.valueOf(this), "555555555555555");
+        }
     }
     ActivityResultLauncher<Intent> activityResultLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),

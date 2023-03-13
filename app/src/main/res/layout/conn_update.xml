@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/updateDialog"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_constraintLeft_toLeftOf="parent"
+    app:layout_constraintRight_toRightOf="parent"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintTop_toTopOf="parent"
+    android:background="@color/gray"
+    android:padding="30dp"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:visibility="visible">
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="최신버전이 아닙니다."
+        android:layout_marginBottom="10dp"/>
+    <Button
+        android:id="@+id/updateVersion"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@color/black"
+        android:layout_marginTop="5dp"
+        android:text="업데이트"
+        android:textColor="@color/white"/>
+</LinearLayout>
