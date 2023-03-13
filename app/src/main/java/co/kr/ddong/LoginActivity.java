@@ -2,9 +2,11 @@ package co.kr.ddong;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -42,9 +44,11 @@ import java.net.UnknownHostException;
 
 public class LoginActivity extends AppCompatActivity {
     private int dLoginFlag = 0;
+    private int dCheckVersionFlag = 0;
 
     TextView introStartTV;
     ImageView introImage;
+    Button updateBt;
 
     private SharedPreferences preferences, accountpref;
 
@@ -67,13 +71,41 @@ public class LoginActivity extends AppCompatActivity {
 
         introImage = (ImageView) findViewById(R.id.introImage);
         introStartTV = (TextView) findViewById(R.id.introStart);
-        signInButton = findViewById(R.id.googleLoginBtn);
+        signInButton = (SignInButton) findViewById(R.id.googleLoginBtn);
+        updateBt = (Button) findViewById(R.id.updateBtn);
+
+        CheckClientVersion checkClientVersion = new CheckClientVersion();
+
+        checkClientVersion.start();
+
+        try{
+            checkClientVersion.join();
+        }catch (InterruptedException e){
+            dCheckVersionFlag = 1;
+            if (dCheckVersionFlag == 0){
+                Log.d(String.valueOf(this), "Client_version is current");
+            }else{
+                updateBt.setVisibility(View.VISIBLE);
+                updateBt.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent intent = new Intent(Intent.ACTION_VIEW);
+                        intent.setData(Uri.parse("market://details?id=co.kr.ddong&hl=en-US&ah=FCSk0q07NZNsREPtF2cEiwBAue4"));
+                        startActivity(intent);
+                    }
+                });
+            }
+        }
+
+        signInButton.setVisibility(View.VISIBLE);
 
         mAuth = FirebaseAuth.getInstance();
         if (mAuth.getCurrentUser() != null) {
             Log.i(String.valueOf(LoginActivity.this), "mAuth is exist");
+            //Toast.makeText(LoginActivity.this, "mAuth is exist", Toast.LENGTH_SHORT).show();
         } else {
             Log.i(String.valueOf(LoginActivity.this), "mAuth is null");
+            //Toast.makeText(LoginActivity.this, "mAuth is null", Toast.LENGTH_SHORT).show();
         }
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
@@ -92,13 +124,13 @@ public class LoginActivity extends AppCompatActivity {
                 if (mUser != null) {
                     updateUI(mUser);
                     Log.d(String.valueOf(LoginActivity.this), "mUser is exist");
-                    Toast.makeText(LoginActivity.this, "mUser is exist", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(LoginActivity.this, "mUser is exist", Toast.LENGTH_SHORT).show();
                 }else{
                     activityResultLauncher.launch(signInIntent);
-                    setResult(RESULT_OK, signInIntent);
+                    //setResult(RESULT_OK, signInIntent);
                     //signIn(signInIntent);
                     Log.d(String.valueOf(LoginActivity.this), "mUser is null");
-                    Toast.makeText(LoginActivity.this, "mUser is null", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(LoginActivity.this, "mUser is null", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -124,8 +156,10 @@ public class LoginActivity extends AppCompatActivity {
                 @Override
                 public void onActivityResult(ActivityResult result) {
                     Log.d("TAG", "result : " + result);
+
                     if (result.getResultCode() == RESULT_OK) {
                         Log.d(String.valueOf(LoginActivity.this), "Result = RESULT_OK START!!!!!!!!!!!");
+                        //Toast.makeText(LoginActivity.this, "Result = RESULT_OK START!!!!!!!!!!!", Toast.LENGTH_SHORT).show();
                         Intent signInIntent = result.getData();
                         Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(signInIntent);
                         try {
@@ -134,6 +168,9 @@ public class LoginActivity extends AppCompatActivity {
                             firebaseAuthWithGoogle(account);
                         }catch (ApiException e) {
                         }
+                    }else {
+                        Toast.makeText(LoginActivity.this, "구글 로그인 실패. 관리자에게 문의하십시오.", Toast.LENGTH_SHORT).show();
+
                     }
                 }
             }
@@ -192,6 +229,7 @@ public class LoginActivity extends AppCompatActivity {
     }*/
     private void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
         Log.d(String.valueOf(LoginActivity.this), "firebaseAuthWithGoogle Start!!!!!!!!!!!!!");
+        //Toast.makeText(LoginActivity.this, "firebaseAuthWithGoogle Start!!!!!!!!!!!!!", Toast.LENGTH_SHORT).show();
 
         AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
         mAuth.signInWithCredential(credential)
@@ -213,6 +251,7 @@ public class LoginActivity extends AppCompatActivity {
     }
     private void updateUI(FirebaseUser user) { //update ui code here
         Log.d(String.valueOf(LoginActivity.this), "updateUI Start!!!!!!!!!!!!!");
+        //Toast.makeText(LoginActivity.this, "updateUI Start!!!!!!!!!!!!!", Toast.LENGTH_SHORT).show();
         ClientThread clientThread = new ClientThread();
         if (user != null) {
             uId = mUser.getUid();
@@ -313,6 +352,69 @@ public class LoginActivity extends AppCompatActivity {
                     pw.close();
                     socket.close();
                 }
+            } catch (UnknownHostException e) {
+                Toast.makeText(LoginActivity.this, "서버와 연결에 실패하였습니다.", Toast.LENGTH_SHORT).show();
+                e.printStackTrace();
+            } catch (IOException e) {
+                Toast.makeText(LoginActivity.this, "서버와 연결에 실패하였습니다.", Toast.LENGTH_SHORT).show();
+                e.printStackTrace();
+            }
+        }
+    }
+
+    class CheckClientVersion extends Thread {
+
+        public void run() {
+            String host = "52.192.140.126";
+            int port = 9999;
+
+            int dFlag = 1;
+
+            String client_ver = getString(R.string.app_ver);
+
+            Log.i(String.valueOf(this), "check_Ver Thread Start");
+
+            try {
+                Socket socket = new Socket(host,port);
+                Log.i(String.valueOf(this), "Make socket ["+host+"]["+port+"]");
+
+
+                InputStream is = socket.getInputStream();
+                OutputStream os = socket.getOutputStream();
+                PrintWriter pw;
+                BufferedReader reader;
+
+
+
+                String msg = "0,"+ client_ver;
+
+                pw=new PrintWriter(os);
+                pw.println(msg);
+                pw.flush();
+
+                pw.println("done");
+                pw.flush();
+
+                reader = new BufferedReader(new InputStreamReader(is));
+
+                while((msg = reader.readLine()) != null) {
+
+                    Log.i(String.valueOf(this), "svrmsg is [" + msg + "]");
+                    if (msg.equals("1")) {
+                        Log.i(String.valueOf(this), "Current Client Version!!!");
+                        dCheckVersionFlag = 0;
+                        break;
+                    }else {
+                        Log.i(String.valueOf(this), "Client Version is not current version");
+                        //dCheckVersionFlag = Integer.valueOf(msg);
+                        dCheckVersionFlag = 0;
+                        break;
+                    }
+                }
+
+                pw.close();
+                socket.close();
+
             } catch (UnknownHostException e) {
                 Toast.makeText(LoginActivity.this, "서버와 연결에 실패하였습니다.", Toast.LENGTH_SHORT).show();
                 e.printStackTrace();

@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">DDong</string>
     <string name="default_web_client_id2">AIzaSyB_uCqGf8Ga_OcbuCcSiGSA8LPG_I9aCb4</string>
+    <string name="app_ver">1.0.25</string>
 </resources>

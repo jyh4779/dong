@@ -40,6 +40,7 @@ public class PlayActivity extends AppCompatActivity implements View.OnTouchListe
     int downspeed = 20;
     int level = 1;
     int dSvrRet = 0;
+    int touch_image_check = 0;
 
     boolean stopFlag = false;
 
@@ -110,27 +111,37 @@ public class PlayActivity extends AppCompatActivity implements View.OnTouchListe
     @Override
     public boolean onTouch(View view, MotionEvent event) {
         int w = ((ViewGroup) zola.getParent()).getWidth() - zola.getWidth();
+
         //Log.i("onTouch", "w = "+String.valueOf(w));
 
         if(!stopFlag) {
             if (event.getAction() == MotionEvent.ACTION_DOWN) {
                 touchX = event.getX();
+                if(touchX > zola.getX() && touchX < zola.getX()+zolaWidth) {
+                    Log.d("onTouch", "ACTION_DOWN, touch_image_check = 1!!!!!!!!!");
+                    touch_image_check = 1;
+                }
                 //Log.d("onTouch", "ACTION_DOWN, touchX = "+touchX);
                 return true;
             } else if (event.getAction() == MotionEvent.ACTION_MOVE) {
                 //Log.d("onTouch", "ACTION_MOVE");
                 touchX = event.getX();
-                if (touchX > 0 && touchX < w) {
-                    if(touchX > zola.getX())zola.setImageResource(R.drawable.zola_left);
-                    else if(touchX < zola.getX())zola.setImageResource(R.drawable.zola_right);
-                    else if(touchX == zola.getX())zola.setImageResource(R.drawable.zolaman);
-                    zola.setX(touchX);
+                Log.d("onTouch", "ACTION_MOVE, touch_image_check["+touch_image_check+"]");
+                if(touch_image_check == 1) {
+                    if (touchX > 0 && touchX < w) {
+                        if (touchX > zola.getX()) zola.setImageResource(R.drawable.zola_left);
+                        else if (touchX < zola.getX()) zola.setImageResource(R.drawable.zola_right);
+                        else if (touchX == zola.getX()) zola.setImageResource(R.drawable.zolaman);
+                        zola.setX(touchX);
+                    }
                 }
                 //Log.d("onTouch", "ACTION_MOVE, touchX = "+touchX);
                 //Log.d("onTouch", "ACTION_MOVE, zolaX = "+zola.getX());
                 return true;
             } else if (event.getAction() == MotionEvent.ACTION_UP) {
                 zola.setImageResource(R.drawable.zolaman);
+                Log.d("onTouch", "ACTION_UP, touch_image_check = 0!!!!!!!!!");
+                touch_image_check = 0;
             }
         }
         return false;
