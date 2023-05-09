@@ -15,8 +15,6 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -63,6 +61,8 @@ public class LoginActivity extends AppCompatActivity {
     private GoogleSignInClient mGoogleSignInClient;
     //private static final int RC_SIGN_IN = 9001;
 
+    ConnUpdateFrg connUpdate_frg;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -73,18 +73,20 @@ public class LoginActivity extends AppCompatActivity {
         introImage = (ImageView) findViewById(R.id.introImage);
         introStartTV = (TextView) findViewById(R.id.introStart);
         signInButton = (SignInButton) findViewById(R.id.googleLoginBtn);
+
         //updateBt = (Button) findViewById(R.id.updateBtn);
         //updateLL = (LinearLayout) findViewById(R.id.updateDialog);
 
-        CheckClientVersion checkClientVersion = new CheckClientVersion();
+
+        /*CheckClientVersion checkClientVersion = new CheckClientVersion();
 
         checkClientVersion.start();
 
         try{
             checkClientVersion.join();
         }catch (InterruptedException e){
-        }
-        dCheckVersionFlag = 1;
+        }*/
+        dCheckVersionFlag = 0;
         if (dCheckVersionFlag == 0){
             Log.d(String.valueOf(this), "Client_version is current");
 
@@ -131,6 +133,7 @@ public class LoginActivity extends AppCompatActivity {
             introImage.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    dLoginFlag = 1;
                     if (dLoginFlag == 1) {
                         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                         startActivity(intent);
@@ -140,21 +143,13 @@ public class LoginActivity extends AppCompatActivity {
                     }
                 }
             });
-        }else{
-            Log.d(String.valueOf(this), "Client_version is not current");
-            ConnUpdateFrg connUpdate_frg = new ConnUpdateFrg();
-            Log.d(String.valueOf(this), "11111111");
-
-            FragmentManager fragmentManager = getSupportFragmentManager();
-            Log.d(String.valueOf(this), "2222222222");
-            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-            Log.d(String.valueOf(this), "333333333");
-
-            fragmentTransaction.add(R.id.updateFrame,connUpdate_frg);
-            Log.d(String.valueOf(this), "444444444444");
-            fragmentTransaction.commit();
-            Log.d(String.valueOf(this), "555555555555555");
         }
+        /*else{
+            Log.d(String.valueOf(this), "Client_version is not current");
+            connUpdate_frg = new ConnUpdateFrg();
+            Log.d(String.valueOf(this), "11111111");
+            getSupportFragmentManager().beginTransaction().replace(R.id.container, connUpdate_frg).commit();
+        }*/
     }
     ActivityResultLauncher<Intent> activityResultLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),

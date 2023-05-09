@@ -1,5 +1,6 @@
 package co.kr.ddong;
 
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -14,13 +15,26 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 public class ConnUpdateFrg extends Fragment {
+    LoginActivity activity;
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        activity = (LoginActivity) getActivity();
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        activity = null;
+    }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         Log.d(String.valueOf(this), "aaaaaaaaaaaaaaaaa");
+        ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.conn_update, container, false);
         Button updateBt;
-        View v = inflater.inflate(R.layout.conn_update, container, false);
-        updateBt = (Button) v.findViewById(R.id.updateVersion);
+        updateBt = (Button) rootView.findViewById(R.id.updateVersion);
         Log.d(String.valueOf(this), "66666666666");
 
         updateBt.setOnClickListener(new View.OnClickListener() {
@@ -35,6 +49,6 @@ public class ConnUpdateFrg extends Fragment {
                 Log.d(String.valueOf(this), "0000000000000");
             }
         });
-        return v;
+        return rootView;
     }
 }
